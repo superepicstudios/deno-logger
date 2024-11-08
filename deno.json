@@ -1,0 +1,21 @@
+{
+    "name": "@superepic/logger",
+    "version": "1.0.0",
+    "description": "Tiny (but effective) logging library for Deno 🪵🦕",
+    "exports": "./src/mod.ts",
+    "lint": {
+		"rules": {
+			"exclude": [
+				"no-explicit-any",
+				"ban-types"
+			]
+		}
+	},
+    "tasks": {
+		"demo": "deno run -A demo/main.ts"
+	},
+    "imports": {
+        "@std/expect": "jsr:@std/expect@^1.0.7",
+        "@std/fmt": "jsr:@std/fmt@^1.0.3"
+    }
+}
