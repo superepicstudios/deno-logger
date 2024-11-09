@@ -4,7 +4,8 @@
     "jsr:@std/assert@^1.0.7": "1.0.7",
     "jsr:@std/expect@^1.0.7": "1.0.7",
     "jsr:@std/fmt@^1.0.3": "1.0.3",
-    "jsr:@std/internal@^1.0.5": "1.0.5"
+    "jsr:@std/internal@^1.0.5": "1.0.5",
+    "npm:is-what@^5.0.2": "5.0.2"
   },
   "jsr": {
     "@std/assert@1.0.7": {
@@ -27,10 +28,16 @@
       "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
     }
   },
+  "npm": {
+    "is-what@5.0.2": {
+      "integrity": "sha512-vI7Ui0qzNQ2ClDZd0bC7uqRk3T1imbX5cZODmVlqqdqiwmSIUX3CNSiRgFjFMJ987sVCMSa7xZeEDtpJduPg4A=="
+    }
+  },
   "workspace": {
     "dependencies": [
       "jsr:@std/expect@^1.0.7",
-      "jsr:@std/fmt@^1.0.3"
+      "jsr:@std/fmt@^1.0.3",
+      "npm:is-what@^5.0.2"
     ]
   }
 }

@@ -167,3 +167,15 @@ Deno.test("Log messages without a delimiter", () => {
     expect(output!.formattedMessage).not.toContain("::")
 
 })
+
+Deno.test("Log messages with context data", () => {
+
+    const id = crypto.randomUUID()
+
+    const output = logger.info("Hello, world", {
+        id: id
+    })
+
+    expect(output?.ctx?.id).toBe(id)
+
+})

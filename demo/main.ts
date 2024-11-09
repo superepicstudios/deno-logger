@@ -6,6 +6,12 @@ logger.info("Hello, info!")
 logger.warn("Hello, warning!")
 logger.error("Hello, error!")
 
+logger.info("Message with context", {
+    id: crypto.randomUUID(),
+    timestamp: new Date(),
+    message: "Suh Dude"
+})
+
 try {
     logger.fatal("Hello, fatal!")
 }

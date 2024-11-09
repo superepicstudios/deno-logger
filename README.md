@@ -24,7 +24,7 @@ logger.fatal("Hello, fatal!")  // => [FATAL] Fri, 08 Nov 2024 00:04:30 UTC :: He
 
 ### Categories
 
-Loggers can also be created with a `category` to help organize your console output:
+Loggers can be created with a `category` to help organize your console output:
 
 ```ts
 import { Logger } from "@superepic/logger"
@@ -78,4 +78,24 @@ const isProduction = (Deno.env.get("env") == "production")
 Logger.level = isProduction ? LogLevel.WARN : LogLevel.DEBUG
 
 ...
+```
+
+### Context Data
+
+```ts
+import { Logger } from "@superepic/logger"
+
+const logger = new Logger()
+
+logger.info("Hello, world!", {
+
+    id: crypto.randomUUID(),
+    timestamp: new Date()
+
+})
+
+// [DEBUG] Fri, 08 Nov 2024 00:04:30 UTC :: Hello, world! :: {
+//   id: 4f8ff698-2799-4283-b010-2367cae0439c,
+//   timestamp: Fri Nov 08 2024 23:54:18 GMT-0800 (Pacific Standard Time)
+// }
 ```
