@@ -17,6 +17,7 @@
     "imports": {
         "@std/expect": "jsr:@std/expect@^1.0.7",
         "@std/fmt": "jsr:@std/fmt@^1.0.3",
+        "date-fns": "npm:date-fns@^4.1.0",
         "is-what": "npm:is-what@^5.0.2"
     }
 }

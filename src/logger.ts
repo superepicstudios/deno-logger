@@ -5,6 +5,8 @@ import { LogLevel } from "./types/log-level.type.ts"
 import { LogLevelOperator } from "./types/log-level-operator.type.ts"
 import type { LogMessage } from "./types/log-message.type.ts"
 import { type LoggerOptions, LoggerOptionDefaults } from "./types/logger-options.type.ts";
+import { DateUtils } from "./utils/date.utils.ts";
+import { TimestampFormat } from "./types/timestamp-format.type.ts";
 
 /**
  Class that outputs messages to the console.
@@ -12,19 +14,24 @@ import { type LoggerOptions, LoggerOptionDefaults } from "./types/logger-options
 export class Logger {
 
     /**
-     The global logger's level.
+     The global log level.
      */
     public static level = LogLevel.DEBUG
 
     /**
-     The global logger's level operator.
+     The global log level operator.
 
      Defaults to `GREATER_OR_EQUAL`.
      */
     public static levelOperator = LogLevelOperator.GREATER_OR_EQUAL
 
     /**
-     Flag indicating if logging is ensbled for this logger.
+     * Optional set of pre-determined categories to use for message alignment.
+     */
+    public static alignmentCategories?: string[]
+
+    /**
+     Flag indicating if logging is enabled for this logger.
      */
     public isEnabled = true
 
@@ -243,11 +250,21 @@ export class Logger {
 
     ): string {
 
-        const timestamp = date
-            .toUTCString()
-            .replaceAll("GMT", "UTC")
+        let result = ""
 
-        let result = `${this.symbol(level)} ${white(timestamp)}`
+        if (this.options!.timestampFormat != TimestampFormat.NONE) {
+
+            const timestamp = DateUtils.format(
+                date,
+                this.options!.timestampFormat!
+            )
+
+            result = `${this.symbol(level)} ${white(timestamp)}`
+
+        }
+        else {
+            result = this.symbol(level)
+        }
 
         if (category) {
             result += ` ${yellow(`[${category}]`)}`
@@ -256,6 +273,19 @@ export class Logger {
         const colorizer = this.colorizer(level)
 
         // Message
+
+        if ((Logger.alignmentCategories?.length ?? 0) > 0) {
+
+            const categoryLength = category?.length ?? 0
+            const maxCategoryLength = maxLength(Logger.alignmentCategories!)
+
+            const count = category ?
+                (maxCategoryLength - categoryLength) :
+                (maxCategoryLength - categoryLength) + 3
+
+            result += " ".repeat(count)
+
+        }
 
         if (this.options!.messageDelimiter) {
             result += ` ${this.options!.messageDelimiter} ${colorizer(message)}`
