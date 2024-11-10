@@ -1,6 +1,6 @@
 {
     "name": "@superepic/logger",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Tiny (but effective) logging library for Deno 🪵🦕",
     "exports": "./src/mod.ts",
     "lint": {
