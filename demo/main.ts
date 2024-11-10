@@ -16,5 +16,8 @@ try {
     logger.fatal("Hello, fatal!")
 }
 catch (error) {
+
+    logger.newline()
     console.log(`>> Caught fatal - ${error}`)
+
 }

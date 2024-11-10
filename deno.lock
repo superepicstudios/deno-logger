@@ -5,6 +5,7 @@
     "jsr:@std/expect@^1.0.7": "1.0.7",
     "jsr:@std/fmt@^1.0.3": "1.0.3",
     "jsr:@std/internal@^1.0.5": "1.0.5",
+    "npm:date-fns@^4.1.0": "4.1.0",
     "npm:is-what@^5.0.2": "5.0.2"
   },
   "jsr": {
@@ -29,6 +30,9 @@
     }
   },
   "npm": {
+    "date-fns@4.1.0": {
+      "integrity": "sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg=="
+    },
     "is-what@5.0.2": {
       "integrity": "sha512-vI7Ui0qzNQ2ClDZd0bC7uqRk3T1imbX5cZODmVlqqdqiwmSIUX3CNSiRgFjFMJ987sVCMSa7xZeEDtpJduPg4A=="
     }
@@ -37,6 +41,7 @@
     "dependencies": [
       "jsr:@std/expect@^1.0.7",
       "jsr:@std/fmt@^1.0.3",
+      "npm:date-fns@^4.1.0",
       "npm:is-what@^5.0.2"
     ]
   }
