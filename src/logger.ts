@@ -203,7 +203,6 @@ export class Logger {
      Logs & throws a fatal message.
      @param message - The message to log.
      @param ctx - Optional context data to attach to the message.
-     @returns The logged message, or `undefined` if nothing was logged.
      */
     public fatal(
 
@@ -212,7 +211,7 @@ export class Logger {
 
     ) {
 
-        return this.log(
+        this.log(
             message,
             LogLevel.FATAL,
             true,
