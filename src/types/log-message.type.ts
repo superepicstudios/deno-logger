@@ -9,7 +9,7 @@ export type LogMessage = {
     message: string
 
     /** The formatted message */
-    formattedMessage: string
+    formatted: string
 
     /** The message's level */
     level: LogLevel

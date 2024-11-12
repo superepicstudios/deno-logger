@@ -9,8 +9,8 @@ Deno.test("Debug message is logged", () => {
     const output = logger.debug(message)
 
     expect(output).toBeDefined()
-    expect(output!.level).toBe(LogLevel.DEBUG)
     expect(output!.message).toBe(message)
+    expect(output!.level).toBe(LogLevel.DEBUG)
 
 })
 
@@ -20,8 +20,8 @@ Deno.test("Info message is logged", () => {
     const output = logger.info(message)
 
     expect(output).toBeDefined()
-    expect(output!.level).toBe(LogLevel.INFO)
     expect(output!.message).toBe(message)
+    expect(output!.level).toBe(LogLevel.INFO)
 
 })
 
@@ -31,8 +31,8 @@ Deno.test("Warning message is logged", () => {
     const output = logger.warn(message)
 
     expect(output).toBeDefined()
-    expect(output!.level).toBe(LogLevel.WARN)
     expect(output!.message).toBe(message)
+    expect(output!.level).toBe(LogLevel.WARN)
 
 })
 
@@ -42,8 +42,8 @@ Deno.test("Error message is logged", () => {
     const output = logger.error(message)
 
     expect(output).toBeDefined()
-    expect(output!.level).toBe(LogLevel.ERROR)
     expect(output!.message).toBe(message)
+    expect(output!.level).toBe(LogLevel.ERROR)
 
 })
 
@@ -80,6 +80,39 @@ Deno.test("Fatal message is thrown", () => {
     }
 
     throw new Error("Fatal error was never thrown")
+
+})
+
+Deno.test('Create a deferred message', () => {
+
+    const message = "Hello, world!"
+    const level = LogLevel.INFO
+
+    const logMessage = logger.message(
+        message,
+        level
+    )
+
+    expect(logMessage).toBeDefined()
+    expect(logMessage.message).toBe(message)
+    expect(logMessage.level).toBe(level)
+
+})
+
+Deno.test('Log a deferred message', () => {
+
+    const deferredMessage = logger.message(
+        "Hello, world!",
+        LogLevel.INFO
+    )
+
+    const loggedMessage = logger
+        .logMessage(deferredMessage)
+
+    expect(loggedMessage).toBeDefined()
+    expect(loggedMessage!.message).toBe(deferredMessage.message)
+    expect(loggedMessage!.formatted).toBe(deferredMessage.formatted)
+    expect(loggedMessage!.level).toBe(deferredMessage.level)
 
 })
 
@@ -153,8 +186,8 @@ Deno.test("Log messages use a custom delimiter", () => {
     const output = customLogger.info("Hello, world!")
 
     expect(output).toBeDefined()
-    expect(output!.formattedMessage).toContain("⭐️")
-    expect(output!.formattedMessage).not.toContain("::")
+    expect(output!.formatted).toContain("⭐️")
+    expect(output!.formatted).not.toContain("::")
 
 })
 
@@ -164,7 +197,7 @@ Deno.test("Log messages without a delimiter", () => {
     const output = customLogger.info("Hello, world!")
 
     expect(output).toBeDefined()
-    expect(output!.formattedMessage).not.toContain("::")
+    expect(output!.formatted).not.toContain("::")
 
 })
 

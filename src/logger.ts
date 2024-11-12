@@ -26,7 +26,7 @@ export class Logger {
     public static levelOperator = LogLevelOperator.GREATER_OR_EQUAL
 
     /**
-     * Optional set of pre-determined categories to use for message alignment.
+     Optional set of pre-determined categories to use for message alignment.
      */
     public static alignmentCategories?: string[]
 
@@ -68,12 +68,45 @@ export class Logger {
     /**
      Logs a message.
      @param message - The message to log.
-     @param level - The desired log level.
+     @param throwOnError - Flag indicating if errors should be thrown while logging, default to `false`.
+     @returns The logged message, or `undefined` if nothing was logged.
+     */
+    public logMessage(
+
+        message: LogMessage,
+        throwOnError: boolean = false
+
+    ): LogMessage | undefined {
+
+        return this._log(
+            message,
+            throwOnError
+        )
+
+    }
+
+    /**
+     Logs a message.
+     @param message - The message to log.
+     @param level - The desired log-level.
+     @param throwOnError - Flag indicating if errors should be thrown while logging, defaults to `false`.
      @param ctx - Optional context data to attach to the message.
      @returns The logged message, or `undefined` if nothing was logged.
      */
-    public log(message: string, level: LogLevel, ctx?: any): LogMessage | undefined {
-        return this._log(message, level, false, ctx)
+    public log(
+
+        message: string,
+        level: LogLevel,
+        throwOnError: boolean = false,
+        ctx?: any
+
+    ): LogMessage | undefined {
+
+        return this.logMessage(
+            this.message(message, level, ctx),
+            throwOnError
+        )
+
     }
 
     /**
@@ -82,8 +115,20 @@ export class Logger {
      @param ctx - Optional context data to attach to the message.
      @returns The logged message, or `undefined` if nothing was logged.
      */
-    public debug(message: string, ctx?: any): LogMessage | undefined {
-        return this._log(message, LogLevel.DEBUG, false, ctx)
+    public debug(
+
+        message: string,
+        ctx?: any
+
+    ): LogMessage | undefined {
+
+        return this.log(
+            message,
+            LogLevel.DEBUG,
+            false,
+            ctx
+        )
+
     }
 
     /**
@@ -92,8 +137,20 @@ export class Logger {
      @param ctx - Optional context data to attach to the message.
      @returns The logged message, or `undefined` if nothing was logged.
      */
-    public info(message: string, ctx?: any): LogMessage | undefined {
-        return this._log(message, LogLevel.INFO, false, ctx)
+    public info(
+
+        message: string,
+        ctx?: any
+
+    ): LogMessage | undefined {
+
+        return this.log(
+            message,
+            LogLevel.INFO,
+            false,
+            ctx
+        )
+
     }
 
     /**
@@ -102,19 +159,44 @@ export class Logger {
      @param ctx - Optional context data to attach to the message.
      @returns The logged message, or `undefined` if nothing was logged.
      */
-    public warn(message: string, ctx?: any): LogMessage | undefined {
-        return this._log(message, LogLevel.WARN, false, ctx)
+    public warn(
+
+        message: string,
+        ctx?: any
+
+    ): LogMessage | undefined {
+
+        return this.log(
+            message,
+            LogLevel.WARN,
+            false,
+            ctx
+        )
+
     }
 
     /**
      Logs an error message.
      @param message - The message to log.
-     @param throws - Flag indicating if the error should be thrown, defaults to `false`.
+     @param throws - Flag indicating if the error should be thrown while logging, defaults to `false`.
      @param ctx - Optional context data to attach to the message.
      @returns The logged message, or `undefined` if nothing was logged.
      */
-    public error(message: string, throws: boolean = false, ctx?: any): LogMessage | undefined {
-        return this._log(message, LogLevel.ERROR, throws, ctx)
+    public error(
+
+        message: string,
+        throws: boolean = false,
+        ctx?: any
+
+    ): LogMessage | undefined {
+
+        return this.log(
+            message,
+            LogLevel.ERROR,
+            throws,
+            ctx
+        )
+
     }
 
     /**
@@ -123,8 +205,20 @@ export class Logger {
      @param ctx - Optional context data to attach to the message.
      @returns The logged message, or `undefined` if nothing was logged.
      */
-    public fatal(message: string, ctx?: any) {
-        this._log(message, LogLevel.FATAL, true, ctx)
+    public fatal(
+
+        message: string,
+        ctx?: any
+
+    ) {
+
+        return this.log(
+            message,
+            LogLevel.FATAL,
+            true,
+            ctx
+        )
+
     }
 
     /**
@@ -132,6 +226,36 @@ export class Logger {
      */
     public newline() {
         console.log()
+    }
+
+    /**
+     Creates an unlogged message.
+     @param message - The message.
+     @param level - The desired log-level.
+     @param ctx - Optional context data to attach to the message.
+     @returns An unlogged message.
+     */
+    public message(message: string, level: LogLevel, ctx?: any): LogMessage {
+
+        const date = new Date()
+
+        const formatted = this.formatMessage(
+            level,
+            message,
+            date,
+            this.category,
+            ctx
+        )
+
+        return {
+            message,
+            formatted,
+            level,
+            date,
+            category: this.category,
+            ctx
+        }
+
     }
 
     // MARK: Private
@@ -152,60 +276,83 @@ export class Logger {
 
     private _log(
 
-        message: string,
-        level: LogLevel,
-        throwOnError: boolean = false,
-        ctx?: any
+        message: LogMessage,
+        throwOnError: boolean
 
     ): LogMessage | undefined {
 
-        if (!this.canLog(level)) {
+        if (!this.canLog(message.level)) {
             return
         }
 
-        const now = new Date()
-
-        const formattedMessage = this.formatMessage(
-            level,
-            message,
-            now,
-            this.category,
-            ctx
-        )
-
-        const logMessage: LogMessage = {
-            message,
-            formattedMessage,
-            level,
-            date: new Date(),
-            category: this.category,
-            ctx
-        }
-
-        switch (level) {
-        case LogLevel.DEBUG: console.debug(formattedMessage); break
-        case LogLevel.INFO:  console.info(formattedMessage); break
-        case LogLevel.WARN:  console.warn(formattedMessage); break
+        switch (message.level) {
+        case LogLevel.DEBUG: console.debug(message.formatted); break
+        case LogLevel.INFO:  console.info(message.formatted); break
+        case LogLevel.WARN:  console.warn(message.formatted); break
         case LogLevel.ERROR:
 
-            console.error(formattedMessage)
+            console.error(message.formatted)
 
             if (throwOnError) {
-                throw new Error(message)
+                throw new Error(message.message)
             }
 
             break
 
         case LogLevel.FATAL:
 
-            console.error(formattedMessage)
-            throw new Error(message)
+            console.error(message.formatted)
+            throw new Error(message.message)
 
         }
 
-        return logMessage
+        return message
 
     }
+
+    // private _log(
+
+    //     message: string,
+    //     level: LogLevel,
+    //     throwOnError: boolean = false,
+    //     ctx?: any
+
+    // ): LogMessage | undefined {
+
+    //     if (!this.canLog(level)) {
+    //         return
+    //     }
+
+    //     const logMessage = this.message(
+    //         message,
+    //         level,
+    //         ctx
+    //     )
+
+    //     switch (level) {
+    //     case LogLevel.DEBUG: console.debug(logMessage.formatted); break
+    //     case LogLevel.INFO:  console.info(logMessage.formatted); break
+    //     case LogLevel.WARN:  console.warn(logMessage.formatted); break
+    //     case LogLevel.ERROR:
+
+    //         console.error(logMessage.formatted)
+
+    //         if (throwOnError) {
+    //             throw new Error(logMessage.message)
+    //         }
+
+    //         break
+
+    //     case LogLevel.FATAL:
+
+    //         console.error(logMessage.formatted)
+    //         throw new Error(logMessage.message)
+
+    //     }
+
+    //     return logMessage
+
+    // }
 
     private symbol(level: LogLevel): string {
 
